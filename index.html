@@ -2602,54 +2602,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       this.textContent = "Fingerprint Unlock";
     }
   });
-      // Cancel scan button
-      document.getElementById('cancelScan').addEventListener('click', function() {
-        fingerprintAuth.hideScanner();
-      });
-
-      // Auto-fill fingerprint on page load (if supported)
-      if (fingerprintAuth.isSupported && fingerprintAuth.isSetup) {
-        setTimeout(() => {
-          tryAutoFill();
-        }, 1000);
-      }
-    });
-
-    // Auto-fill functionality
-    async function tryAutoFill() {
-      if (!fingerprintAuth.isSupported || !fingerprintAuth.isSetup) return;
-
-      try {
-        const challenge = new Uint8Array(32);
-        crypto.getRandomValues(challenge);
-
-        const publicKeyCredentialRequestOptions = {
-          challenge: challenge,
-          allowCredentials: [{
-            id: fingerprintAuth.base64ToArrayBuffer(fingerprintAuth.credentialId),
-            type: "public-key"
-          }],
-          userVerification: "required",
-          timeout: 30000 // Shorter timeout for auto-fill
-        };
-
-        const assertion = await navigator.credentials.get({
-          publicKey: publicKeyCredentialRequestOptions,
-          mediation: 'conditional' // This enables auto-fill
-        });
-
-        if (assertion) {
-          const isValid = await fingerprintAuth.verifyAssertion(assertion);
-          if (isValid) {
-            showSuccess('Auto-unlocked with fingerprint!');
-            await unlockWalletWithBiometric();
-          }
-        }
-      } catch (error) {
-        // Auto-fill failed or was cancelled, this is normal
-        console.log('Auto-fill cancelled or failed:', error);
-      }
-    }
+      
 
     // Hubi in unlockWalletWithBiometric function-ku si fiican u shaqeyso
 async function unlockWalletWithBiometric() {
