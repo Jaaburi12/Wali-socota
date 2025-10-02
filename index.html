@@ -2602,50 +2602,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       this.textContent = "Fingerprint Unlock";
     }
   });
-      
-
-    // Hubi in unlockWalletWithBiometric function-ku si fiican u shaqeyso
-async function unlockWalletWithBiometric() {
-  try {
-    console.log('Starting biometric unlock...');
     
-    const encryptedKey = localStorage.getItem('laam_wallet_key');
-    if (!encryptedKey) {
-      throw new Error('No wallet found');
-    }
-
-    // Isticmaal FALLBACK KEY
-    const fallbackKey = localStorage.getItem('laam_wallet_biometric_fallback');
-    if (!fallbackKey) {
-      throw new Error('No biometric fallback found');
-    }
-
-    const publicKey = localStorage.getItem('laam_wallet_public');
-    const biometricKey = CryptoJS.SHA256(publicKey + "biometric_fallback").toString();
-    
-    // Isticmaal fallback key
-    const decryptedKey = decryptSecretKey(fallbackKey, biometricKey);
-    
-    if (!decryptedKey) {
-      throw new Error('Biometric decryption failed');
-    }
-    
-    currentKeypair = StellarSdk.Keypair.fromSecret(decryptedKey);
-    
-    await loadWallet();
-    watchDeposits();
-    
-    showSuccess('Wallet unlocked successfully with fingerprint!');
-    document.getElementById('authSection').classList.add('hidden');
-    document.getElementById('loggedInView').classList.remove('hidden');
-    
-    console.log('Biometric unlock completed successfully');
-    
-  } catch (error) {
-    console.error('Biometric unlock failed:', error);
-    throw error; // Ku sii tuur error-ka si event listener-ku u qabto
-  }
-}
     // Update wallet save to also create biometric-compatible version
     const originalImportAndSave = document.getElementById('importAndSaveBtn').onclick;
     document.getElementById('importAndSaveBtn').onclick = async function(e) {
